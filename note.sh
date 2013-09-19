@@ -20,6 +20,11 @@ nnv() {
 	markdown $NOTES_DIR/`awk "NR==$1" $NOTES_DIR/files.txt` | lynx -stdin
 }
 
+# Delete note given index to last query
+nnd() {
+	rm $NOTES_DIR/`awk "NR==$1" $NOTES_DIR/files.txt` 
+}
+
 # Search for a tag, display files
 nft() {
 	export NOTES_PWD=`pwd`
@@ -39,7 +44,7 @@ nft() {
 			echo -en '\e[48;5;0m'
 		fi
 		f2=${f%.*}
-		title=`head -q -n 1 $f | cut -d"#" -f2-`
+		title=`head -q -n 1 $f | cut -d"#" -f2- | sed 's/^ *//g'`
 		tags=`grep Tags $f | cut -d"#" -f2- --output-delimiter=""`
 		printf "%2d %-10s %-30.30s %-35.35s" \
 			$i $f2 "$title" "$tags"
@@ -65,7 +70,7 @@ ng() {
 	for f in `cat files.txt`
 	do
 		f2=${f%.*}
-		title=`head -q -n 1 $f | cut -d"#" -f2-`
+		title=`head -q -n 1 $f | cut -d"#" -f2- | sed 's/^ *//g'`
 		tags=`grep Tags $f | cut -d"#" -f2- --output-delimiter=""`
 		if [ $f -nt $f2.html ]; then 
 			markdown $f > $f2.html
