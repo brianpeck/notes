@@ -31,11 +31,11 @@ nft() {
 	und=`tput smul`
 	nound=`tput rmul`
 	cd $NOTES_DIR/
-	grep -l "#$*" *.md > files.txt
+	grep -l "#$*" `ls -t *.md` > files.txt
 	let i=1
 	echo ""
-	printf "%2s %-13.13s %-39.39s %-44.44s %s\n" \
-		"${und}ID${nound}" "${und}File" "${nound} ${und}Title" "${nound} ${und}Tags" "${nound}"
+	printf "%2s %-13.13s %-39.39s %-44.44s %-19.19s %s\n" \
+		"${und}ID${nound}" "${und}File" "${nound} ${und}Title" "${nound} ${und}Tags" "${nound} ${und}Date" "${nound}" 
 	echo -en '\e[0;31m'
 	for f in `cat files.txt`
 	do
@@ -46,8 +46,9 @@ nft() {
 		f2=${f%.*}
 		title=`head -q -n 1 $f | cut -d"#" -f2- | sed 's/^ *//g'`
 		tags=`grep Tags $f | cut -d"#" -f2- --output-delimiter=""`
-		printf "%2d %-10.10s %-30.30s %-35.35s" \
-			$i $f2 "$title" "$tags"
+		date=`stat -c %y $f | cut -d" " -f1`
+		printf "%2d %-10.10s %-30.30s %-35.35s %-10.10s" \
+			$i $f2 "$title" "$tags" "$date"
 		let "i=$i+1"
 		echo -e '\e[0;31m'
 	done
@@ -63,7 +64,7 @@ ng() {
 	if [ -z $* ]; then
 		ls *.md > files.txt
 	else
-		grep -l "#$*" *.md > files.txt
+		grep -l "#$*" `ls -t *.md` > files.txt
 	fi
 	echo "<html><head><title>Index</title></head><body><table>" > $NOTES_DIR/index.html
 	echo "<tr><th>Name</th><th>Title</th><th>Tags</th></tr>" >> $NOTES_DIR/index.html
