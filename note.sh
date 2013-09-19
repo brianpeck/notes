@@ -46,7 +46,7 @@ nft() {
 		f2=${f%.*}
 		title=`head -q -n 1 $f | cut -d"#" -f2- | sed 's/^ *//g'`
 		tags=`grep Tags $f | cut -d"#" -f2- --output-delimiter=""`
-		printf "%2d %-10s %-30.30s %-35.35s" \
+		printf "%2d %-10.10s %-30.30s %-35.35s" \
 			$i $f2 "$title" "$tags"
 		let "i=$i+1"
 		echo -e '\e[0;31m'
