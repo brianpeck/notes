@@ -25,6 +25,18 @@ nnd() {
 	rm $NOTES_DIR/`awk "NR==$1" $NOTES_DIR/files.txt` 
 }
 
+# Add tags to a note given index to last query
+nnat() {
+	file=$NOTES_DIR/`awk "NR==$1" $NOTES_DIR/files.txt`
+	sed -i "/Tags/ s/$/ #$2/" $file	
+}
+
+# Remove tags from a note given index to last query
+nnrt() {
+	file=$NOTES_DIR/`awk "NR==$1" $NOTES_DIR/files.txt`
+	sed -i "/Tags/ s/#$2 \?//" $file
+}
+
 # Search for a tag, display files
 nft() {
 	export NOTES_PWD=`pwd`
