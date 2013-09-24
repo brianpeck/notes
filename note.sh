@@ -10,6 +10,12 @@ nne() {
 	$EDITOR $NOTES_DIR/`awk "NR==$1" $NOTES_DIR/files.txt`
 }
 
+# Move (rename) a note
+nmv() {
+	mv $NOTES_DIR/$1.md $NOTES_DIR/$2.md
+	mv $NOTES_DIR/$1.html $NOTES_DIR/$2.html &> \dev\null
+}
+
 # View note given name
 nv() {
 	markdown $NOTES_DIR/$*.md | lynx -stdin
