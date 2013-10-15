@@ -101,6 +101,17 @@ ng() {
 	cd $NOTES_PWD
 }
 
+nm () {
+	file=$NOTES_DIR/${1,,}$(date +%Y%m%d).md
+	if [ ! -f $file ]; then
+		echo "# $1 Meeting Notes - `date +%Y-%m-%d`" > $file
+		echo "" >> $file
+		echo "*Tags:* #Meeting #$1" >> $file
+		echo "" >> $file
+	fi
+	$EDITOR $file
+}
+
 nls () {
 	tree -CR --noreport $NOTES_DIR -P *.md | awk '{ if ((NR > 1) gsub(/.md/,"")); \
 	if (NF==1) print $1; else if (NF==2) print $2; else if (NF==3) printf "  %s\n", $3 }' ;
