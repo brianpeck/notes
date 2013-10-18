@@ -10,11 +10,11 @@ To install, simply add `source notes.sh` (or wherever you put notes.sh) in your 
 ## Usage
 A number of basic commands are supported, with more added occasionally.
 
-### n <name>
+`n <name>`
 Opens <note>.md for editing.
 
-### nne <index>
+`nne <index>`
 Opens a file with index <index> from last query for editing.
 
-### nmv <old> <new>
+`nmv <old> <new>`
 Renames a file from <old> to <new>
