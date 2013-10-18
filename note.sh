@@ -118,3 +118,20 @@ nls () {
 	tree -CR --noreport $NOTES_DIR -P *.md | awk '{ if ((NR > 1) gsub(/.md/,"")); \
 	if (NF==1) print $1; else if (NF==2) print $2; else if (NF==3) printf "  %s\n", $3 }' ;
 }
+
+
+# Creates or adds to a log
+# Usage: nlog <name> <item>
+nlog () {
+	file=$NOTES_DIR/${1,,}.md
+	if [ ! -f $file ]; then
+		echo "# Log - $1" > $file
+		echo "" >> $file
+		echo "*Tags:* #Log #$1" >> $file
+		echo "" >> $file
+	fi
+	echo -n $(date +%Y%m%d)": " >> $file
+	echo $* | cut -d' ' -f2- >> $file
+	echo "" >> $file
+}
+
