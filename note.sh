@@ -101,6 +101,8 @@ ng() {
 	cd $NOTES_PWD
 }
 
+# Create new meeting note with current date in name and title.
+# Usage: nm <meeting>
 nm () {
 	file=$NOTES_DIR/${1,,}$(date +%Y%m%d).md
 	if [ ! -f $file ]; then
