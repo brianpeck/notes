@@ -84,20 +84,20 @@ ng() {
 	else
 		grep -l "#$*" `ls -t *.md` > files.txt
 	fi
-	echo "<html><head><title>Index</title></head><body><table>" > $NOTES_DIR/index.html
-	echo "<tr><th>Name</th><th>Title</th><th>Tags</th></tr>" >> $NOTES_DIR/index.html
+	echo "<html><head><title>Index</title></head><body><table>" > $NOTES_DIR/html/index.html
+	echo "<tr><th>Name</th><th>Title</th><th>Tags</th></tr>" >> $NOTES_DIR/html/index.html
 	for f in `cat files.txt`
 	do
 		f2=${f%.*}
 		title=`head -q -n 1 $f | cut -d"#" -f2- | sed 's/^ *//g'`
 		tags=`grep Tags $f | cut -d"#" -f2- --output-delimiter=""`
-		if [ $f -nt $f2.html ]; then 
-			markdown $f > $f2.html
+		if [ $f -nt html/$f2.html ]; then 
+			markdown $f > html/$f2.html
 		fi
-		echo "<tr><td><a href=$f2.html>$f2</a></td><td>$title</td><td>$tags</td></tr>" >> $NOTES_DIR/index.html	
+		echo "<tr><td><a href=$f2.html>$f2</a></td><td>$title</td><td>$tags</td></tr>" >> $NOTES_DIR/html/index.html	
 	done
-	echo "</table></body></html>" >> $NOTES_DIR/index.html
-	lynx $NOTES_DIR/index.html
+	echo "</table></body></html>" >> $NOTES_DIR/html/index.html
+	lynx $NOTES_DIR/html/index.html
 	cd $NOTES_PWD
 }
 
