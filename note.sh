@@ -124,14 +124,19 @@ nls () {
 # Usage: nlog <name> <item>
 nlog () {
 	file=$NOTES_DIR/${1,,}-log.md
+	date=$(date +%Y-%m-%d)
 	if [ ! -f $file ]; then
 		echo "# Log - $1" > $file
 		echo "" >> $file
 		echo "*Tags:* #Log #$1" >> $file
-		echo "" >> $file
 	fi
-	echo -n $(date +%Y-%m-%d)": " >> $file
+	ldate=`awk '/:/{ print $0 }' $file | tail -1 | cut -d':' -f1`
+	if [ "$ldate" == "$date" ]; then
+		echo -n "            " >> $file	
+	else
+		echo "" >> $file
+		echo -n $(date +%Y-%m-%d)": " >> $file
+	fi
 	echo $* | cut -d' ' -f2- >> $file
-	echo "" >> $file
 }
 
