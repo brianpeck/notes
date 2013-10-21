@@ -123,14 +123,14 @@ nls () {
 # Creates or adds to a log
 # Usage: nlog <name> <item>
 nlog () {
-	file=$NOTES_DIR/${1,,}.md
+	file=$NOTES_DIR/${1,,}-log.md
 	if [ ! -f $file ]; then
 		echo "# Log - $1" > $file
 		echo "" >> $file
 		echo "*Tags:* #Log #$1" >> $file
 		echo "" >> $file
 	fi
-	echo -n $(date +%Y%m%d)": " >> $file
+	echo -n $(date +%Y-%m-%d)": " >> $file
 	echo $* | cut -d' ' -f2- >> $file
 	echo "" >> $file
 }
