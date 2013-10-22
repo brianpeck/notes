@@ -52,7 +52,7 @@ nft() {
 	grep -l "#$*" `ls -t *.md` > files.txt
 	let i=1
 	echo ""
-	printf "%2s %-13.13s %-39.39s %-44.44s %-19.19s %s\n" \
+	printf "%2s %-15.15s %-39.39s %-44.44s %-19.19s %s\n" \
 		"${und}ID${nound}" "${und}File" "${nound} ${und}Title" "${nound} ${und}Tags" "${nound} ${und}Date" "${nound}" 
 	echo -en '\e[0;31m'
 	for f in `cat files.txt`
@@ -65,7 +65,7 @@ nft() {
 		title=`head -q -n 1 $f | cut -d"#" -f2- | sed 's/^ *//g'`
 		tags=`grep Tags $f | cut -d"#" -f2- --output-delimiter=""`
 		date=`stat -c %y $f | cut -d" " -f1`
-		printf "%2d %-10.10s %-30.30s %-35.35s %-10.10s" \
+		printf "%2d %-12.12s %-30.30s %-35.35s %-10.10s" \
 			$i $f2 "$title" "$tags" "$date"
 		let "i=$i+1"
 		echo -e '\e[0;31m'
