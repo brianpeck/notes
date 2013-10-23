@@ -50,6 +50,9 @@ nft() {
 	nound=`tput rmul`
 	cd $NOTES_DIR/
 	grep -l "#$*" `ls -t *.md` > files.txt
+	# Calculate column widths
+	col=$(tput cols)
+		
 	let i=1
 	echo ""
 	printf "%2s %-15.15s %-39.39s %-44.44s %-19.19s %s\n" \
