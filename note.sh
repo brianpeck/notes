@@ -57,16 +57,47 @@ nft() {
 	echo -en '\e[0;31m'
 	for f in `cat files.txt`
 	do
-		if [ $(( $i % 2 )) -eq 0 ]
-		then
-			echo -en '\e[48;5;0m'
-		fi
 		f2=${f%.*}
 		title=`head -q -n 1 $f | cut -d"#" -f2- | sed 's/^ *//g'`
 		tags=`grep Tags $f | cut -d"#" -f2- --output-delimiter=""`
 		date=`stat -c %y $f | cut -d" " -f1`
-		printf "%2d %-12.12s %-30.30s %-35.35s %-10.10s" \
-			$i $f2 "$title" "$tags" "$date"
+		len=35
+		ip=$i
+		# loop to make sure we fit all tags on their own lines
+		while [ `echo $tags | wc -m` -gt $len ];
+		do
+			tags_cur=`echo $tags | cut -d' ' -f1`
+			j=1
+			# loop to get exactly as many tags as will fit on the line
+			while [ `echo $tags | cut -d' ' -f1-$j | wc -m` -lt $len ];
+			do
+				tags_cur=`echo $tags | cut -d' ' -f1-$j`
+				let j=j+1
+			done
+			# change color for alternate lines
+			if [ $(( $i % 2 )) -eq 0 ]
+			then
+				echo -en '\e[48;5;0m'
+			fi
+			# print formatted line
+			printf "%-2.2s %-12.12s %-30.30s %-35.35s %-10.10s" \
+				"$ip" "$f2" "$title" "$tags_cur" "$date"
+			echo -e '\e[0;31m'
+			# remove stuff that has been printed
+			tags=`echo $tags | cut -d' ' -f$j-`
+			f2=" "
+			date=" "
+			title=" "
+			ip=" "
+		done
+		# change color for alternate lines
+		if [ $(( $i % 2 )) -eq 0 ]
+		then
+			echo -en '\e[48;5;0m'
+		fi
+		# print formatted line
+		printf "%-2.2s %-12.12s %-30.30s %-35.35s %-10.10s" \
+			"$ip" "$f2" "$title" "$tags" "$date"
 		let "i=$i+1"
 		echo -e '\e[0;31m'
 	done
