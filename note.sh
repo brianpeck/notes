@@ -52,27 +52,32 @@ nft() {
 	grep -l "#$*" `ls -t *.md` > files.txt
 	# Calculate column widths
 	col=$(tput cols)
+	let title_col=(col-28)/2
+	tags_col=$title_col
+	if [ $title_col -gt 40 ]; then
+		title_col=40
+		tags_col=40
+	fi
 		
 	let i=1
 	echo ""
-	printf "%2s %-15.15s %-39.39s %-44.44s %-19.19s %s\n" \
+	printf "%2s %-15.15s %-$(($title_col+9)).$(($title_col+9))s %-$(($tags_col+9)).$(($tags_col+9))s %-19.19s %s\n" \
 		"${und}ID${nound}" "${und}File" "${nound} ${und}Title" "${nound} ${und}Tags" "${nound} ${und}Date" "${nound}" 
 	echo -en '\e[0;31m'
 	for f in `cat files.txt`
 	do
 		f2=${f%.*}
 		title=`head -q -n 1 $f | cut -d"#" -f2- | sed 's/^ *//g'`
-		tags=`grep Tags $f | cut -d"#" -f2- --output-delimiter=""`
+		tags=`grep Tags $f | head -1 | cut -d"#" -f2- --output-delimiter=""`
 		date=`stat -c %y $f | cut -d" " -f1`
-		len=35
 		ip=$i
 		# loop to make sure we fit all tags on their own lines
-		while [ `echo $tags | wc -m` -gt $len ];
+		while [ `echo $tags | wc -m` -gt $tags_col ];
 		do
 			tags_cur=`echo $tags | cut -d' ' -f1`
 			j=1
 			# loop to get exactly as many tags as will fit on the line
-			while [ `echo $tags | cut -d' ' -f1-$j | wc -m` -lt $len ];
+			while [ `echo $tags | cut -d' ' -f1-$j | wc -m` -lt $tags_col ];
 			do
 				tags_cur=`echo $tags | cut -d' ' -f1-$j`
 				let j=j+1
@@ -83,7 +88,7 @@ nft() {
 				echo -en '\e[48;5;0m'
 			fi
 			# print formatted line
-			printf "%-2.2s %-12.12s %-30.30s %-35.35s %-10.10s" \
+			printf "%-2.2s %-12.12s %-$(($title_col)).$(($title_col))s %-$(($tags_col)).$(($tags_col))s %-10.10s" \
 				"$ip" "$f2" "$title" "$tags_cur" "$date"
 			echo -e '\e[0;31m'
 			# remove stuff that has been printed
@@ -99,7 +104,7 @@ nft() {
 			echo -en '\e[48;5;0m'
 		fi
 		# print formatted line
-		printf "%-2.2s %-12.12s %-30.30s %-35.35s %-10.10s" \
+		printf "%-2.2s %-12.12s %-$(($title_col)).$(($title_col))s %-$(($tags_col)).$(($tags_col))s %-10.10s" \
 			"$ip" "$f2" "$title" "$tags" "$date"
 		let "i=$i+1"
 		echo -e '\e[0;31m'
@@ -124,7 +129,7 @@ ng() {
 	do
 		f2=${f%.*}
 		title=`head -q -n 1 $f | cut -d"#" -f2- | sed 's/^ *//g'`
-		tags=`grep Tags $f | cut -d"#" -f2- --output-delimiter=""`
+		tags=`grep Tags $f | head -1 | cut -d"#" -f2- --output-delimiter=""`
 		if [ $f -nt html/$f2.html ]; then 
 			markdown $f > html/$f2.html
 		fi
