@@ -118,6 +118,9 @@ nft() {
 ng() {
 	export NOTES_PWD=`pwd`
 	cd $NOTES_DIR/
+	if [ ! -d "html" ]; then
+		mkdir html
+	fi
 	if [ -z $* ]; then
 		ls *.md > files.txt
 	else
@@ -144,6 +147,10 @@ ng() {
 np() {
 	export NOTES_PWD=`pwd`
 	cd $NOTES_DIR/
+	if [ ! -d "pdf" ]; then
+		mkdir pdf
+	fi
+
 	if [ -z $* ]; then
 		ls *.md > files.txt
 	else
