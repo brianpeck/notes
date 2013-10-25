@@ -195,13 +195,12 @@ nlog () {
 		echo "" >> $file
 		echo "*Tags:* #Log #$1" >> $file
 	fi
-	ldate=`awk '/:/{ print $0 }' $file | tail -1 | cut -d':' -f1`
-	if [ "$ldate" == "$date" ]; then
-		echo -n "            " >> $file	
-	else
+	ldate=`awk '/###/{ print $0 }' $file | tail -1 | cut -d' ' -f2`
+	if [ "$ldate" != "$date" ]; then
 		echo "" >> $file
-		echo -n $(date +%Y-%m-%d)": " >> $file
+		echo "### "$(date +%Y-%m-%d) >> $file
 	fi
+	echo -n " - " >> $file
 	echo $* | cut -d' ' -f2- >> $file
 }
 
