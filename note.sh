@@ -140,6 +140,25 @@ ng() {
 	cd $NOTES_PWD
 }
 
+# Generate PDFs with Pandoc
+np() {
+	export NOTES_PWD=`pwd`
+	cd $NOTES_DIR/
+	if [ -z $* ]; then
+		ls *.md > files.txt
+	else
+		grep -l "#$*" `ls -t *.md` > files.txt
+	fi
+	for f in `cat files.txt`
+	do
+		f2=${f%.*}
+		if [ $f -nt pdf/$f2.pdf ]; then
+			pandoc -o pdf/$f2.pdf $f
+		fi
+	done
+	cd $NOTES_PWD
+}
+
 # Create new meeting note with current date in name and title.
 # Usage: nm <meeting>
 nm () {
