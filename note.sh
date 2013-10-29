@@ -49,7 +49,20 @@ nft() {
 	und=`tput smul`
 	nound=`tput rmul`
 	cd $NOTES_DIR/
-	grep -l "#$*" `ls -t *.md` > files.txt
+
+	# Create list of files to list
+	let i=1
+	ls -t *.md > files.txt
+	for tag in $@
+	do
+		if [ $i -eq 1 ]; then
+			grep -il "#$tag" `ls -t *.md` > files.txt
+		else
+			grep -il "#$tag" `cat files.txt` > files.txt
+		fi
+		let i=i+1
+	done
+
 	# Calculate column widths
 	col=$(tput cols)
 	let title_col=(col-28)/2
@@ -121,11 +134,20 @@ ng() {
 	if [ ! -d "html" ]; then
 		mkdir html
 	fi
-	if [ -z $* ]; then
-		ls *.md > files.txt
-	else
-		grep -l "#$*" `ls -t *.md` > files.txt
-	fi
+
+	# Create list of files to list
+	let i=1
+	ls -t *.md > files.txt
+	for tag in $@
+	do
+		if [ $i -eq 1 ]; then
+			grep -il "#$tag" `ls -t *.md` > files.txt
+		else
+			grep -il "#$tag" `cat files.txt` > files.txt
+		fi
+		let i=i+1
+	done
+
 	echo "<html><head><title>Index</title></head><body><table>" > $NOTES_DIR/html/index.html
 	echo "<tr><th>Name</th><th>Title</th><th>Tags</th></tr>" >> $NOTES_DIR/html/index.html
 	for f in `cat files.txt`
@@ -151,11 +173,20 @@ np() {
 		mkdir pdf
 	fi
 
-	if [ -z $* ]; then
-		ls *.md > files.txt
-	else
-		grep -l "#$*" `ls -t *.md` > files.txt
-	fi
+
+	# Create list of files to list
+	let i=1
+	ls -t *.md > files.txt
+	for tag in $@
+	do
+		if [ $i -eq 1 ]; then
+			grep -il "#$tag" `ls -t *.md` > files.txt
+		else
+			grep -il "#$tag" `cat files.txt` > files.txt
+		fi
+		let i=i+1
+	done
+
 	for f in `cat files.txt`
 	do
 		f2=${f%.*}
