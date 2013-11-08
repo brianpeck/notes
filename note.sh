@@ -197,6 +197,25 @@ np() {
 	cd $NOTES_PWD
 }
 
+# Generate and view specific file with pandoc
+nnp () {	
+	export NOTES_PWD=`pwd`
+	cd $NOTES_DIR/
+	if [ ! -d "pdf" ]; then
+		mkdir pdf
+	fi
+
+	f=`awk "NR==$1" files.txt`
+	f2=${f%.*}
+	if [ $f -nt pdf/$f2.pdf ]; then
+		pandoc -o pdf/$f2.pdf $f
+	fi
+	# Run in subshell so no extra output is given.
+	{ $PDF_VIEWER pdf/$f2.pdf & } &> /dev/null
+	cd $NOTES_PWD
+	
+}
+
 # Create new meeting note with current date in name and title.
 # Usage: nm <meeting>
 nm () {
@@ -234,4 +253,5 @@ nlog () {
 	echo -n " - " >> $file
 	echo $* | cut -d' ' -f2- >> $file
 }
+
 
