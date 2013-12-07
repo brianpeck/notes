@@ -229,6 +229,19 @@ nm () {
 	$EDITOR $file
 }
 
+# Create a new journal entry
+# Usage: nj
+nj () {
+	file=$NOTES_DIR/journal-$(date +%Y%m%d).md
+	if [ ! -f $file ]; then
+		echo "# Journal - `date +%Y-%m-%d`" > $file
+		echo "" >> $file
+		echo "*Tags:* #Journal" >> $file
+		echo "" >> $file
+	fi
+	$EDITOR $file
+}
+
 nls () {
 	tree -CR --noreport $NOTES_DIR -P *.md | awk '{ if ((NR > 1) gsub(/.md/,"")); \
 	if (NF==1) print $1; else if (NF==2) print $2; else if (NF==3) printf "  %s\n", $3 }' ;
