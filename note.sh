@@ -216,6 +216,12 @@ nnp () {
 	
 }
 
+# Edit with preview
+nnepv () {
+	nnp $*
+	nne $*
+}
+
 # Create new meeting note with current date in name and title.
 # Usage: nm <meeting>
 nm () {
@@ -226,6 +232,22 @@ nm () {
 		echo "*Tags:* #Meeting #$1" >> $file
 		echo "" >> $file
 	fi
+	$EDITOR $file
+}
+
+# Create new meeting note and open a preview
+nmpv () {
+	title=${1,,}$(date +%Y%m%d)
+	file=$NOTES_DIR/$title.md
+	if [ ! -f $file ]; then
+		echo "# $1 Meeting Notes - `date +%Y-%m-%d`" > $file
+		echo "" >> $file
+		echo "*Tags:* #Meeting #$1" >> $file
+		echo "" >> $file
+	fi
+	pandoc -o $NOTES_DIR/pdf/$title.pdf $file
+	{ $PDF_VIEWER $NOTES_DIR/pdf/$title.pdf & } &> /dev/null
+
 	$EDITOR $file
 }
 
@@ -240,6 +262,24 @@ nj () {
 		echo "" >> $file
 	fi
 	$EDITOR $file
+}
+
+# Journal with preview mode
+njpv () {
+	title=journal-$(date +%Y%m%d)
+	file=$NOTES_DIR/$title.md
+	if [ ! -f $file ]; then
+		echo "# Journal - `date +%Y-%m-%d`" > $file
+		echo "" >> $file
+		echo "*Tags:* #Journal" >> $file
+		echo "" >> $file
+	fi
+
+	pandoc -o $NOTES_DIR/pdf/$title.pdf $file
+	{ $PDF_VIEWER $NOTES_DIR/pdf/$title.pdf & } &> /dev/null
+
+	$EDITOR $file
+
 }
 
 nls () {
