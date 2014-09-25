@@ -10,6 +10,11 @@ nne() {
 	$EDITOR $NOTES_DIR/`awk "NR==$1" $NOTES_DIR/files.txt`
 }
 
+# Copy the contents of a note to the clipboard
+nnc() {
+    cat $NOTES_DIR/`awk "NR==$1" $NOTES_DIR/files.txt` | xclip -selection clipboard
+}
+
 # Move (rename) a note
 nmv() {
 	mv $NOTES_DIR/$1.md $NOTES_DIR/$2.md
@@ -220,6 +225,24 @@ nnp () {
 nnepv () {
 	nnp $*
 	nne $*
+}
+
+# Generate PDF with no tags
+nnpnt () {
+	export NOTES_PWD=`pwd`
+	cd $NOTES_DIR/
+	if [ ! -d "pdf" ]; then
+		mkdir pdf
+	fi
+
+	f=`awk "NR==$1" files.txt`
+	f2=${f%.*}
+	if [ $f -nt pdf/$f2.pdf ]; then
+		sed "/Tags/d" $f | pandoc -o pdf/$f2.pdf
+	fi
+	# Run in subshell so no extra output is given.
+	{ $PDF_VIEWER pdf/$f2.pdf & } &> /dev/null
+	cd $NOTES_PWD
 }
 
 # Create new meeting note with current date in name and title.
